@@ -1,22 +1,27 @@
-name: learn-github-actions
-run-name: ${{ github.actor }} is learning GitHub Actions
-on: [push]
+name: List GCS Buckets
 
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  id-token: write
 
 jobs:
-  test_job:
-    # Add "id-token" with the intended permissions.
-    permissions:
-      contents: 'read'
-      id-token: 'write'
+  list-buckets:
     runs-on: ubuntu-latest
-    container:
-      image: gcr.io/google.com/cloudsdktool/google-cloud-cli:latest
+
     steps:
-      - uses: 'actions/checkout@v4'
-      - uses: 'google-github-actions/auth@v2'
-        with:
-          project_id: 'ghactions-46891'
-          workload_identity_provider: 'projects/390395656114/locations/global/workloadIdentityPools/github/providers/ghactions-gcp-example'
-      - run: gcloud auth list
-      - run: gcloud storage ls
+    - uses: actions/checkout@v4
+
+    - id: auth
+      uses: google-github-actions/auth@v2
+      with:
+        workload_identity_provider: projects/390395656114/locations/global/workloadIdentityPools/github/providers/ghactions-gcp-example
+        service_account: ghactions-gcp@ghactions-46891.iam.gserviceaccount.com
+
+    - name: List GCS Buckets
+      run: |
+        gcloud auth login --brief --cred-file="${{ steps.auth.outputs.credentials_file_path }}"
+        gcloud storage buckets list
