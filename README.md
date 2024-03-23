@@ -6,8 +6,9 @@ See <https://github.com/google-github-actions/auth>
 
 ```
 # TODO: replace ${PROJECT_ID} with your value below.
-export PROJECT_ID=project-name
-export GITHUB_ORG=github-org-name
+export PROJECT_ID=ghactions-46891
+export GITHUB_ORG=seandavi
+export GITHUB_REPO=ghactions-gcp-example
 
 gcloud iam workload-identity-pools create "github" \
   --project="${PROJECT_ID}" \
@@ -22,7 +23,7 @@ gcloud iam workload-identity-pools describe "github" \
 
 # TODO: replace ${PROJECT_ID} and ${GITHUB_ORG} with your values below.
 
-gcloud iam workload-identity-pools providers create-oidc "my-repo" \
+gcloud iam workload-identity-pools providers create-oidc "${GITHUB_REPO}" \
   --project="${PROJECT_ID}" \
   --location="global" \
   --workload-identity-pool="github" \
@@ -33,7 +34,7 @@ gcloud iam workload-identity-pools providers create-oidc "my-repo" \
 
 # TODO: replace ${PROJECT_ID} with your value below.
 
-gcloud iam workload-identity-pools providers describe "my-repo" \
+gcloud iam workload-identity-pools providers describe "${GITHUB_REPO}" \
   --project="${PROJECT_ID}" \
   --location="global" \
   --workload-identity-pool="github" \
@@ -47,6 +48,8 @@ Use this value as the workload_identity_provider value in the GitHub Actions YAM
   with:
     project_id: 'my-project'
     workload_identity_provider: '...' # "projects/123456789/locations/global/workloadIdentityPools/github/providers/my-repo"
+
+
 ```
 As needed, allow authentications from the Workload Identity Pool to Google Cloud resources. These can be any Google Cloud resources that support federated ID tokens, and it can be done after the GitHub Action is configured.
 
@@ -61,10 +64,14 @@ The following example shows granting access from a GitHub Action in a specific r
 # ${WORKLOAD_IDENTITY_POOL_ID} is the full pool id, such as
 # "projects/123456789/locations/global/workloadIdentityPools/github".
 
-gcloud secrets add-iam-policy-binding "my-secret" \
-  --project="${PROJECT_ID}" \
-  --role="roles/secretmanager.secretAccessor" \
-  --member="principalSet://iam.googleapis.com/${WORKLOAD_IDENTITY_POOL_ID}/attribute.repository/${REPO}"
+gcloud projects add-iam-policy-binding ghactions-46891 \
+  --member="principalSet://iam.googleapis.com/projects/390395656114/locations/global/workloadIdentityPools/github/attribute.repository/ghactions-gcp-example" \
+  --role="roles/storage.Admin"
+
+# or with repository owner (see above for the "conditions")
+gcloud projects add-iam-policy-binding ghactions-46891 \
+  --member="principalSet://iam.googleapis.com/projects/390395656114/locations/global/workloadIdentityPools/github/attribute.repository_owner/seandavi" \
+  --role="roles/storage.admin"
 ```
 
 
