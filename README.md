@@ -71,7 +71,5 @@ gcloud projects add-iam-policy-binding ghactions-46891 \
 # or with repository owner (see above for the "conditions")
 gcloud projects add-iam-policy-binding ghactions-46891 \
   --member="principalSet://iam.googleapis.com/projects/390395656114/locations/global/workloadIdentityPools/github/attribute.repository_owner/seandavi" \
-  --role="roles/storage.admin"
+  --role="roles/storage.    
 ```
-
-
