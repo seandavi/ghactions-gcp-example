@@ -18,8 +18,9 @@ jobs:
     - id: auth
       uses: google-github-actions/auth@v2
       with:
+        project_id: ghactions-46891
         workload_identity_provider: projects/390395656114/locations/global/workloadIdentityPools/github/providers/ghactions-gcp-example
-        service_account: ghactions-gcp@ghactions-46891.iam.gserviceaccount.com
+        #service_account: ghactions-gcp@ghactions-46891.iam.gserviceaccount.com
 
     - name: List GCS Buckets
       run: |
