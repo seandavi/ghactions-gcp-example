@@ -23,5 +23,4 @@ jobs:
 
     - name: List GCS Buckets
       run: |
-        gcloud auth login --brief --cred-file="${{ steps.auth.outputs.credentials_file_path }}"
         gcloud storage buckets list
