@@ -9,7 +9,9 @@ jobs:
     permissions:
       contents: 'read'
       id-token: 'write'
-    runs-on: cloud-sdk-docker
+    runs-on: ubuntu-latest
+    container:
+      image: gcr.io/google.com/cloudsdktool/google-cloud-cli:latest
     steps:
       - uses: 'actions/checkout@v4'
       - uses: 'google-github-actions/auth@v2'
