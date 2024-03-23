@@ -1,0 +1,14 @@
+jobs:
+    job_id:
+      # Add "id-token" with the intended permissions.
+      permissions:
+        contents: 'read'
+        id-token: 'write'
+  
+      steps:
+      - uses: 'actions/checkout@v4'
+  
+      - uses: 'google-github-actions/auth@v2'
+        with:
+          project_id: 'ghactions-46891'
+          workload_identity_provider: 'projects/390395656114/locations/global/workloadIdentityPools/github/providers/ghactions-gcp-example'
